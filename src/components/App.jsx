@@ -17,15 +17,14 @@ export class App extends Component {
   };
 
   countPositiveFeedbackPercentage = () => {
-    const { good, neutral, bad } = this.state;
-    return good + bad + neutral ? `${((good / (good + bad + neutral)) * 100).toFixed(0)}%` : `0%`;
+    const { good } = this.state;
+    return this.countTotalFeedback() ? `${((good / this.countTotalFeedback()) * 100).toFixed(0)}%` : `0%`;
   };
 
   leaveFeedback = (event) => {
-    this.setState((state) => {
+    this.setState((prevState) => {
       return {
-        ...state,
-        [event.target.textContent]: state[event.target.textContent] + 1,
+        [event.target.textContent]: prevState[event.target.textContent] + 1,
       };
     });
   };
@@ -38,7 +37,7 @@ export class App extends Component {
           <FeedbackOptions options={Object.keys(this.state)} onLeaveFeedback={this.leaveFeedback} />
         </Section>
         <Section title="Statistics">
-          {good + bad + neutral ? (
+          {this.countTotalFeedback() ? (
             <Statistics
               good={good}
               neutral={neutral}
